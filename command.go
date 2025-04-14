@@ -82,6 +82,7 @@ var commands = map[string]CommandFunc{
 	"template":  templateCommand,
 	"ulid":      ulidCommand,
 	"uuidv4":    uuidv4Command,
+	"uuidv7":    uuidv7Command,
 }
 
 func base64DecodeCommand(in *CommandInput) (*CommandOutput, error) {
@@ -268,6 +269,20 @@ func ulidCommand(in *CommandInput) (*CommandOutput, error) {
 // Defaults to uuid v4.
 func uuidv4Command(in *CommandInput) (*CommandOutput, error) {
 	v, err := uuid.NewRandom()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate uuid: %w", err)
+	}
+
+	out := &CommandOutput{
+		Value: v,
+	}
+
+	return out, nil
+}
+
+// Creates uuid v7.
+func uuidv7Command(in *CommandInput) (*CommandOutput, error) {
+	v, err := uuid.NewV7()
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate uuid: %w", err)
 	}
